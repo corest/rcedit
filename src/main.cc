@@ -160,7 +160,7 @@ int wmain(int argc, const wchar_t *argv[])
 
       const wchar_t *key = argv[++i];
       std::wstring processedValue = ReplaceSpecialCharacters(argv[++i]);
-      if (!updater.SetVersionString(key, value))
+      if (!updater.SetVersionString(key, processedValue))
         return print_error("Unable to change version string");
     }
     else if (wcscmp(argv[i], L"--get-version-string") == 0 ||
