@@ -89,3 +89,17 @@ Get resource string:
 ```bash
 $ rcedit "path-to-exe-or-dll" --get-resource-string id_number
 ```
+
+Set language ID and code page:
+
+```bash
+$ rcedit "path-to-exe-or-dll" --set-language-and-codepage 1033 1252
+```
+
+This option allows specifying the language ID and code page for version information. It can help with displaying special characters like copyright symbols (©) and registered trademark symbols (®) correctly.
+
+Common values:
+- `1033` - English (United States)
+- `1252` - Windows ANSI Latin 1
+- `1200` - Unicode (UTF-16)
+- `65001` - Unicode (UTF-8)
