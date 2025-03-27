@@ -93,6 +93,41 @@ namespace
 
 } // namespace
 
+std::wstring ReplaceSpecialCharacters(const std::wstring &input)
+{
+  std::wstring result = input;
+
+  // Define replacements for special characters
+  struct SpecialChar
+  {
+    wchar_t unicode;
+    wchar_t windows_char;
+  };
+
+  // Table of special characters and their Windows code page equivalents
+  const SpecialChar specialChars[] = {
+      {0x00A9, 0xA9}, // Copyright symbol ©
+      {0x00AE, 0xAE}, // Registered trademark ®
+      {0x2122, 0x99}, // Trademark ™
+      {0x20AC, 0x80}, // Euro €
+      {0x2022, 0x95}, // Bullet •
+                      // Add more as needed
+  };
+
+  // Replace each special character
+  for (const auto &sc : specialChars)
+  {
+    size_t pos = 0;
+    while ((pos = result.find(sc.unicode, pos)) != std::wstring::npos)
+    {
+      result.replace(pos, 1, 1, static_cast<wchar_t>(sc.windows_char));
+      pos++;
+    }
+  }
+
+  return result;
+}
+
 int wmain(int argc, const wchar_t *argv[])
 {
   bool loaded = false;
@@ -124,7 +159,7 @@ int wmain(int argc, const wchar_t *argv[])
         return print_error("--set-version-string requires 'Key' and 'Value'");
 
       const wchar_t *key = argv[++i];
-      const wchar_t *value = argv[++i];
+      std::wstring processedValue = ReplaceSpecialCharacters(argv[++i]);
       if (!updater.SetVersionString(key, value))
         return print_error("Unable to change version string");
     }
