@@ -93,34 +93,31 @@ namespace
 
 } // namespace
 
-std::wstring ReplaceSpecialCharacters(const std::wstring &input)
+std::wstring ReplaceTokens(const std::wstring &input)
 {
   std::wstring result = input;
 
-  // Define replacements for special characters
-  struct SpecialChar
+  // Define replacements for token strings
+  struct TokenReplacement
   {
-    wchar_t unicode;
-    wchar_t windows_char;
+    std::wstring token;
+    wchar_t replacement;
   };
 
-  // Table of special characters and their Windows code page equivalents
-  const SpecialChar specialChars[] = {
-      {0x00A9, 0xA9}, // Copyright symbol ©
-      {0x00AE, 0xAE}, // Registered trademark ®
-      {0x2122, 0x99}, // Trademark ™
-      {0x20AC, 0x80}, // Euro €
-      {0x2022, 0x95}, // Bullet •
-                      // Add more as needed
+  // Table of tokens and their replacements
+  const TokenReplacement replacements[] = {
+      {L"COPYRIGHT_SYMBOL", 0xA9},            // Copyright symbol ©
+      {L"REGISTERED_TRADEMARK_SYMBOL", 0xAE}, // Registered trademark ®
+      {L"TRADEMARK_SYMBOL", 0x99},            // Trademark ™
   };
 
-  // Replace each special character
-  for (const auto &sc : specialChars)
+  // Replace each token
+  for (const auto &r : replacements)
   {
     size_t pos = 0;
-    while ((pos = result.find(sc.unicode, pos)) != std::wstring::npos)
+    while ((pos = result.find(r.token, pos)) != std::wstring::npos)
     {
-      result.replace(pos, 1, 1, static_cast<wchar_t>(sc.windows_char));
+      result.replace(pos, r.token.length(), 1, r.replacement);
       pos++;
     }
   }
@@ -159,7 +156,7 @@ int wmain(int argc, const wchar_t *argv[])
         return print_error("--set-version-string requires 'Key' and 'Value'");
 
       const wchar_t *key = argv[++i];
-      std::wstring processedValue = ReplaceSpecialCharacters(argv[++i]);
+      std::wstring processedValue = ReplaceTokens(argv[++i]);
       if (!updater.SetVersionString(key, processedValue.c_str()))
         return print_error("Unable to change version string");
     }
