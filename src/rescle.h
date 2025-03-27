@@ -141,6 +141,7 @@ namespace rescle
     bool SetProductVersion(unsigned short v1, unsigned short v2, unsigned short v3, unsigned short v4);
     bool SetFileVersion(WORD languageId, UINT id, unsigned short v1, unsigned short v2, unsigned short v3, unsigned short v4);
     bool SetFileVersion(unsigned short v1, unsigned short v2, unsigned short v3, unsigned short v4);
+    bool SetLanguageAndCodePage(LANGID languageId, WORD codePage);
     bool ChangeString(WORD languageId, UINT id, const WCHAR *value);
     bool ChangeString(UINT id, const WCHAR *value);
     bool ChangeRcData(UINT id, const WCHAR *pathToResource);
@@ -193,5 +194,3 @@ namespace rescle
 } // namespace rescle
 
 #endif // VERSION_INFO_UPDATER
-
-bool SetLanguageAndCodePage(LANGID languageId, WORD codePage);
